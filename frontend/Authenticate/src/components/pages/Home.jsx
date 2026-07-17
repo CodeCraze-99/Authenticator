@@ -1,10 +1,10 @@
-import Signin from "./Signin.jsx";
+import Register from "./Register.jsx";
 import Login from "./Login.jsx";
 
-function Page() {
-    preventDefault();
+function Home(event) {
+    event.preventDefault();
     let isLogged = false;
-    if(islogged) {
+    if(isLogged) {
         return(
             <Login></Login>
         );
@@ -19,3 +19,5 @@ function Page() {
         );
     }
 }
+
+export default Home;

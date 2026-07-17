@@ -21,15 +21,13 @@ app.use(express.json());
 app.use(session({
   secret: 'ilovemernstack',
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
   cookie: { secure: true }
 }));
 // Session
 
 // passport 
 passport.use(new LocalStrategy(User.authenticate()));
-
-// use static serialize and deserialize of model for passport session support
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
@@ -49,21 +47,36 @@ app.listen(8080, () => {
     console.log("Listening on port 8080");
 });
 
+// middle ware saving private profile page in future development
+function isLogged(req, res, next) {
+   if(req.isAuthenticated()) {
+    return next(); 
+   }
+   throw new ExpressError(500, "not authenticated to view");
+}
+
 // Signin GET
-app.get("/home/signin", (req, res) => {
+app.get("/home/register", (req, res) => {
     res.send("workin progress");
 })
 
 // Signin POST
-app.post("/home/signin", (req, res) => {
-    let { username, email, password, isLogged } = req.body;
+app.post("/home/register",async (req, res) => {
+   try {
+     let { username, email, password, isLogged } = req.body;
     const signedUser = new User({
         email: email,
-        isLogged: true
+        isLogged: true,
+        // username: username
     });
-    User.save(signedUser);
+   await signedUser.save();
     console.log(`${username} logged in`);
     res.send("signing in");
+   }
+   catch(err) {
+    res.redirect("localhost:/8080/home/register");
+    throw new ExpressError(500, "Unable to register");
+   }
 });
 
 // Login route GET
@@ -81,9 +94,14 @@ app.post("/home/login", passport.authenticate('local', {
 })
 
 
+// profile
+app.get("/profile", isLogged, (req, res)=> {
+    res.send("work in progress here i will show profile");
+})
+
 // Error handling middleware 
 app.use((err, req, res, next) => {
     let { status = 500, message = "something went wrong"} = err;
-    res.status.send(message)
+    res.status.send(message);
     // in progress
 });
