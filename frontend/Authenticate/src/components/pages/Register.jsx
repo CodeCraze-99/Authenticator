@@ -8,7 +8,7 @@ function Register() {
     const onSubmit = async (event) => {
         event.preventDefault();
 
-        await fetch("http://localhost:8080/home/register", {
+        const response = await fetch("http://localhost:8080/home/register", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -19,7 +19,10 @@ function Register() {
                 password,
             })
         });
-        window.location.reload();
+        // window.location.reload();
+
+    console.log(response.status);
+    console.log(await response.text());
     };
 
     return (

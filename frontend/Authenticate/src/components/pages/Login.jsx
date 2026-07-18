@@ -9,8 +9,9 @@ function Login() {
             },
             body: JSON.stringify({
                 username,
-                email,
                 password,
+                email,
+                isLogged,
             })
         });
     };
@@ -18,7 +19,7 @@ function Login() {
         <div className="page">
             <div className="card">
                 <h2 className="title">Login</h2>
-                <form className="form">
+                <form  onSubmit={onSubmit}  className="form">
                     <input className="input" name="username" type="text" placeholder="Enter username" />
                     <input className="input" name="email" type="text" placeholder="Enter email" />
                     <input className="input" name="password" type="password" placeholder="Enter password" />

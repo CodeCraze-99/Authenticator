@@ -13,7 +13,7 @@ const { serialize } = require("v8");
 const session = require("express-session");
 const ExpressError = require("./backend/utils/expresserror.js");
 
-
+console.log("=== THIS IS THE NEW APP ===");
 app.use(cors());
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
@@ -22,11 +22,16 @@ app.use(session({
   secret: 'ilovemernstack',
   resave: false,
   saveUninitialized: false,
-  cookie: { secure: true }
+  cookie: { 
+    secure: false,
+    httpOnly: true
+   }
 }));
 // Session
 
 // passport 
+app.use(passport.initialize());
+app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
@@ -54,40 +59,46 @@ function isLogged(req, res, next) {
    }
    throw new ExpressError(500, "not authenticated to view");
 }
-
-// Signin GET
-app.get("/home/register", (req, res) => {
-    res.send("workin progress");
+app.get("/home/register", (req, res)=> {
+    res.send("ee");
 })
-
 // Signin 
 app.post("/home/register",async (req, res) => {
    try {
-     let { username, email, password, isLogged } = req.body;
+    console.log(typeof User.register);
+    console.log(req.body);
+     let { username, email, password, } = req.body;
     const signedUser = new User({
+        username,
         email: email,
-        isLogged: true,
-        // username: username
     });
-   await signedUser.save();
-    console.log(`${username} logged in`);
-    res.send("signing in");
-   }
-   catch(err) {
-    throw new ExpressError(500, "Unable to register");
-   }
+    console.log("Before register");
+
+await User.register(signedUser, password);
+
+console.log("After register");
+
+res.send("Registered successfully");
+//     await User.register(signedUser, password);
+//     console.log(`${username} logged in`);
+//     res.send("signing in");
+//    }
+//    catch(err) {
+//     // throw new ExpressError(500, "Unable to register"); finalized error
+    
+//    }
+catch (err) {
+    console.log(err);
+    res.status(500).send(err.message);
+}
 });
-
-// Login route GET
 app.get("/home/login", (req, res)=> {
-    res.send("work in progress");
+    res.send("ee");
 })
-
-
-// Login route POST
+// Login route 
 app.post("/home/login", passport.authenticate('local', {
     successRedirect: "/home",
-    failureRedirect: "/home/signin", failureFlash: true
+    failureRedirect: "/home/register", failureFlash: true
 }), (req, res) => {
     res.send("logged");
 })
