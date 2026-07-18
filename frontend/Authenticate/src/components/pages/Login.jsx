@@ -1,17 +1,33 @@
 function Login() {
-    return(
-        <div>
-            <form>
-                <input name="username" type="text" placeholder="enter username" />
-                <br />
-                <input name="email"  type="text" placeholder="enter email"/>
-                <br />
-                <input name="password"  type="text" placeholder="enter password" />
-                <br />
-                <button>Login</button>
-            </form>
+     const onSubmit = async (event) => {
+        event.preventDefault();
+
+        await fetch("http://localhost:8080/home/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                username,
+                email,
+                password,
+            })
+        });
+    };
+    return (
+        <div className="page">
+            <div className="card">
+                <h2 className="title">Login</h2>
+                <form className="form">
+                    <input className="input" name="username" type="text" placeholder="Enter username" />
+                    <input className="input" name="email" type="text" placeholder="Enter email" />
+                    <input className="input" name="password" type="password" placeholder="Enter password" />
+                    <button className="button">Login</button>
+                </form>
+            </div>
         </div>
     );
 }
 
 export default Login;
+// add oonsbumit post request here

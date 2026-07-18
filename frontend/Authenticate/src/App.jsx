@@ -1,16 +1,9 @@
-import { useState } from 'react'
-import './App.css'
-import router from "./router.jsx"
-import { RouterProvider } from "react-router-dom";
-
+import './App.css';
+import router from './router.jsx';
+import { RouterProvider } from 'react-router-dom';
 
 function App() {
-  return(
-    <RouterProvider router={router} />
-  );
-   
+  return <RouterProvider router={router} />;
 }
-
-
 
 export default App;

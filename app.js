@@ -60,7 +60,7 @@ app.get("/home/register", (req, res) => {
     res.send("workin progress");
 })
 
-// Signin POST
+// Signin 
 app.post("/home/register",async (req, res) => {
    try {
      let { username, email, password, isLogged } = req.body;
@@ -74,7 +74,6 @@ app.post("/home/register",async (req, res) => {
     res.send("signing in");
    }
    catch(err) {
-    res.redirect("localhost:/8080/home/register");
     throw new ExpressError(500, "Unable to register");
    }
 });

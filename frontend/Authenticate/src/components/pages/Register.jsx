@@ -8,7 +8,7 @@ function Register() {
     const onSubmit = async (event) => {
         event.preventDefault();
 
-        const response = await fetch("http://localhost:8080/home/register", {
+        await fetch("http://localhost:8080/home/register", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -19,40 +19,41 @@ function Register() {
                 password,
             })
         });
-
-        // Optional:
-        // window.location.reload();
+        window.location.reload();
     };
 
     return (
-        <div>
-            <form onSubmit={onSubmit}>
-                <input
-                    onChange={(e) => setUsername(e.target.value)}
-                    name="username"
-                    type="text"
-                    placeholder="Enter username"
-                />
-                <br />
+        <div className="page">
+            <div className="card">
+                <h2 className="title">Sign in</h2>
+                <form className="form" onSubmit={onSubmit}>
+                    <input
+                        className="input"
+                        onChange={(e) => setUsername(e.target.value)}
+                        name="username"
+                        type="text"
+                        placeholder="Enter username"
+                    />
 
-                <input
-                    onChange={(e) => setEmail(e.target.value)}
-                    name="email"
-                    type="text"
-                    placeholder="Enter email"
-                />
-                <br />
+                    <input
+                        className="input"
+                        onChange={(e) => setEmail(e.target.value)}
+                        name="email"
+                        type="text"
+                        placeholder="Enter email"
+                    />
 
-                <input
-                    onChange={(e) => setPassword(e.target.value)}
-                    name="password"
-                    type="password"
-                    placeholder="Enter password"
-                />
-                <br />
+                    <input
+                        className="input"
+                        onChange={(e) => setPassword(e.target.value)}
+                        name="password"
+                        type="password"
+                        placeholder="Enter password"
+                    />
 
-                <button type="submit">Create account</button>
-            </form>
+                    <button className="button" type="submit">Create account</button>
+                </form>
+            </div>
         </div>
     );
 }
