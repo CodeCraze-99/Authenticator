@@ -14,7 +14,10 @@ const session = require("express-session");
 const ExpressError = require("./backend/utils/expresserror.js");
 
 console.log("=== THIS IS THE NEW APP ===");
-app.use(cors());
+app.use(cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+}));
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -55,46 +58,59 @@ app.listen(8080, () => {
 // middle ware saving private profile page in future development
 function isLogged(req, res, next) {
    if(req.isAuthenticated()) {
-    return next(); 
+    return res.status(401).json({
+        message: "not authenticated"
+    });
    }
-   throw new ExpressError(500, "not authenticated to view");
 }
 app.get("/home/register", (req, res)=> {
     res.send("ee");
 })
 // Signin 
-app.post("/home/register",async (req, res) => {
-   try {
-    console.log(typeof User.register);
-    console.log(req.body);
-     let { username, email, password, } = req.body;
-    const signedUser = new User({
-        username,
-        email: email,
-    });
-    await User.register(signedUser, password);
-    console.log(`${username} logged in`);
-    res.send("signing in");
-   }
-//    catch(err) {
-//     // throw new ExpressError(500, "Unable to register"); finalized error
-    
-//    }
-catch (err) {
-    console.log(err);
-    res.status(500).send(err.message);
-}
+app.post("/home/register", async (req, res, next) => {
+    try {
+        const { username, email, password } = req.body;
+
+        const signedUser = new User({
+            username,
+            email,
+        });
+
+        await User.register(signedUser, password);
+
+        req.login(signedUser, (err) => {
+            if (err) {
+                return next(err);
+            }
+
+            console.log(`${username} logged in`);
+            console.log(req.isAuthenticated());
+
+            res.json({
+                message: "signed in",
+            });
+        });
+
+    } catch (err) {
+        console.log(err);
+        res.status(500).send(err.message);
+    }
 });
+
+
 app.get("/home/login", (req, res)=> {
     res.send("ee");
 });
 // Login route 
-app.post("/home/login", passport.authenticate('local', {
-    successRedirect: "/home",
-    failureRedirect: "/home/register", failureFlash: true
-}), (req, res) => {
-    res.json({ message: "Logged In"});
-})
+app.post("/home/login", passport.authenticate('local'), (req, res) => {
+    res.json({
+         message: "Logged In",
+         user: {
+            username: req.username,
+            email: req.email
+         }
+        });
+});
 
 // logout route 
 app.post("/home/logout", (req, res, next)=> {
@@ -106,13 +122,17 @@ app.post("/home/logout", (req, res, next)=> {
 
 
 // profile
-app.get("/profile", isLogged, (req, res)=> {
-    res.send("work in progress here i will show profile");
+app.get("/home/profile", isLogged, (req, res)=> {
+    res.json({
+        username: req.user.username,
+        email: req.user.email,
+    });
+
 });
 
 // Error handling middleware 
 app.use((err, req, res, next) => {
     let { status = 500, message = "something went wrong"} = err;
-    res.status.send(message);
+    res.send(message);
     // in progress
 });
