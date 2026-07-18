@@ -1,7 +1,8 @@
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f5f3ff;
+  font-family: 'Inter', Arial, sans-serif;
+  background: radial-gradient(circle at top left, rgba(139, 92, 246, 0.18), transparent 25%),
+    linear-gradient(180deg, #f7f3ff 0%, #ede9fe 100%);
   color: #1f1235;
   min-height: 100vh;
 }
@@ -15,94 +16,181 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px;
+  padding: 28px;
+  animation: pageFade 0.55s ease;
 }
 
 .card {
+  width: min(100%, 900px);
+  max-width: 900px;
+  position: relative;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(139, 92, 246, 0.24);
+  border-radius: 30px;
+  padding: 42px;
+  box-shadow: 0 24px 60px rgba(109, 40, 217, 0.16);
+  backdrop-filter: blur(12px);
+  transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+  overflow: hidden;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 32px 72px rgba(109, 40, 217, 0.22);
+  border-color: rgba(139, 92, 246, 0.3);
+}
+
+.card .card {
   width: 100%;
-  max-width: 560px;
-  background: linear-gradient(145deg, #ffffff, #f7f3ff);
-  border: 1px solid rgba(139, 92, 246, 0.2);
-  border-radius: 28px;
-  padding: 34px;
-  box-shadow: 0 20px 45px rgba(109, 40, 217, 0.12);
-  backdrop-filter: blur(10px);
+  max-width: 100%;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  inset: -40px -40px 0 50%;
+  background: radial-gradient(circle at top left, rgba(139, 92, 246, 0.12), transparent 45%);
+  pointer-events: none;
 }
 
 .title {
-  margin: 0 0 16px;
-  font-size: 28px;
-  color: #4c1d95;
+  margin: 0 0 20px;
+  font-size: 32px;
+  color: #4f1d95;
+  letter-spacing: -0.03em;
 }
 
 .form {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
 }
 
 .input {
-  padding: 14px 16px;
+  width: 100%;
+  padding: 16px 18px;
   border: 1px solid rgba(139, 92, 246, 0.22);
-  border-radius: 16px;
+  border-radius: 18px;
   background: #ffffff;
-  color: #2a1a4a;
+  color: #2b1c51;
   font-size: 15px;
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
 }
 
+.input:hover,
 .input:focus {
   outline: none;
   border-color: #8b5cf6;
-  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.16);
+  box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.12);
   transform: translateY(-1px);
+  background: #faf6ff;
 }
 
-.input:required {
-  box-shadow: inset 0 0 0 1px rgba(139, 92, 246, 0.14);
-}
-
-.input:required:invalid {
-  border-color: rgba(192, 132, 252, 0.7);
+.input::placeholder {
+  color: #8a75b5;
 }
 
 .button {
-  padding: 14px 16px;
+  padding: 16px 18px;
   border: none;
-  border-radius: 16px;
-  background: linear-gradient(135deg, #8b5cf6, #6d28d9 60%, #4c1d95);
-  color: white;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 55%, #5b21b6 100%);
+  color: #ffffff;
   cursor: pointer;
   font-size: 15px;
+  font-weight: 600;
   transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
-  box-shadow: 0 10px 24px rgba(109, 40, 217, 0.22);
+  box-shadow: 0 14px 30px rgba(109, 40, 217, 0.22);
 }
 
 .button:hover {
   transform: translateY(-2px);
-  filter: brightness(1.06);
-  box-shadow: 0 12px 28px rgba(109, 40, 217, 0.28);
+  filter: brightness(1.05);
+  box-shadow: 0 16px 34px rgba(109, 40, 217, 0.28);
+}
+
+.button:active {
+  transform: translateY(0px);
 }
 
 .text {
-  margin-top: 12px;
-  color: #7c3aed;
+  margin-top: 18px;
+  color: #5a2db7;
   text-align: center;
+  font-weight: 500;
+  letter-spacing: 0.01em;
 }
 
-@media (max-width: 480px) {
+.linkButton {
+  display: inline-flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: 16px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  background: rgba(139, 92, 246, 0.08);
+  color: #4c1d95;
+  text-decoration: none;
+  font-weight: 600;
+  transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+
+.linkButton:hover {
+  background: rgba(139, 92, 246, 0.16);
+  transform: translateY(-1px);
+}
+
+.profileRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding: 16px;
+  background: rgba(139, 92, 246, 0.05);
+  border-radius: 18px;
+  border: 1px solid rgba(139, 92, 246, 0.12);
+}
+
+.profileLabel {
+  color: #6d28d9;
+  font-weight: 700;
+}
+
+.profileValue {
+  color: #321463;
+  font-weight: 600;
+}
+
+@keyframes pageFade {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 520px) {
+  .page {
+    padding: 20px;
+  }
+
   .card {
-    padding: 22px;
-    border-radius: 18px;
+    padding: 28px;
+    border-radius: 24px;
   }
 
   .title {
-    font-size: 22px;
+    font-size: 26px;
   }
 
   .input,
   .button {
-    padding: 13px 14px;
+    padding: 14px 16px;
   }
 }
 

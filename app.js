@@ -27,7 +27,8 @@ app.use(session({
   saveUninitialized: false,
   cookie: { 
     secure: false,
-    httpOnly: true
+    httpOnly: true,
+    sameSite: "lax"
    }
 }));
 // Session
@@ -55,14 +56,20 @@ app.listen(8080, () => {
     console.log("Listening on port 8080");
 });
 
-// middle ware saving private profile page in future development
 function isLogged(req, res, next) {
-   if(req.isAuthenticated()) {
+    console.log("Authenticated:", req.isAuthenticated());
+    console.log("User:", req.user);
+
+    if (req.isAuthenticated()) {
+        return next();
+    }
+
     return res.status(401).json({
-        message: "not authenticated"
+        message: "Not authenticated"
     });
-   }
 }
+
+
 app.get("/home/register", (req, res)=> {
     res.send("ee");
 })
@@ -97,17 +104,13 @@ app.post("/home/register", async (req, res, next) => {
     }
 });
 
-
-app.get("/home/login", (req, res)=> {
-    res.send("ee");
-});
 // Login route 
 app.post("/home/login", passport.authenticate('local'), (req, res) => {
     res.json({
          message: "Logged In",
          user: {
-            username: req.username,
-            email: req.email
+            username: req.user.username,
+            email: req.user.email
          }
         });
 });
@@ -123,12 +126,26 @@ app.post("/home/logout", (req, res, next)=> {
 
 // profile
 app.get("/home/profile", isLogged, (req, res)=> {
+     console.log(req.headers.cookie);
+    console.log(req.session);
+    console.log(req.isAuthenticated());
+     console.log("Session ID:", req.sessionID);
+    console.log("Session:", req.session);
+    console.log("User:", req.user);
+    console.log("Authenticated:", req.isAuthenticated());
+
+
     res.json({
         username: req.user.username,
         email: req.user.email,
     });
 
 });
+
+// Delete route
+app.delete("/home/delete", (req, res, next)=> {
+    let { id } = req.body.id
+})
 
 // Error handling middleware 
 app.use((err, req, res, next) => {

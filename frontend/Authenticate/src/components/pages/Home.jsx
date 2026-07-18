@@ -1,19 +1,16 @@
+import { Link } from "react-router-dom";
 import Register from "./Register.jsx";
-import Login from "./Login.jsx";
 
 function Home() {
-    let isLogged = false;
-
-    if (isLogged) {
-        return <Login />;
-    }
-
+  
     return (
         <div className="page">
             <div className="card">
                 <h2 className="title">Welcome</h2>
                 <Register />
-                <p className="text">Already have an account? Login here</p>
+                <Link className="linkButton" to="/login">
+                    Already have an account? Login here
+                </Link>
             </div>
         </div>
     );
