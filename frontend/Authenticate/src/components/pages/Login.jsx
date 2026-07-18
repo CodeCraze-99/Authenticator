@@ -1,18 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { useEffect } from "react";
 
 function Login() {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
-    
 
     const onSubmit = async (event) => {
         event.preventDefault();
 
-        await fetch("http://localhost:8080/home/login", {
+        const response = await fetch("http://localhost:8080/home/login", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -24,7 +22,9 @@ function Login() {
                 email,
             })
         });
-        navigate("/profile");
+        if (response.ok) {
+            navigate("/profile");
+        }
     };
 
     const isLogged = async ()=> {
@@ -32,9 +32,7 @@ function Login() {
             method: "GET",
             credentials: "include"
         });
-        const data = await response.json();
         if(response.ok) { 
-            // can also use data.authenticated
             navigate("/profile");
         }
         else {

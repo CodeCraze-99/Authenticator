@@ -1,6 +1,5 @@
 import { useState } from "react";
- import { useNavigate } from "react-router-dom";
-  const navigate = useNavigate();
+import { useNavigate } from "react-router-dom";
 
 function Register() {
     const [username, setUsername] = useState("");
@@ -24,9 +23,9 @@ function Register() {
                 password,
             })
         });
-        // window.location.reload();
-        
-         navigate("/profile");
+        if (response.ok) {
+            navigate("/profile");
+        }
     };
 
     return (

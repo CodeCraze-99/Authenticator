@@ -15,7 +15,7 @@ const ExpressError = require("./backend/utils/expresserror.js");
 
 console.log("=== THIS IS THE NEW APP ===");
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: ["http://localhost:5173", "http://localhost:5174"],
     credentials: true,
 }));
 app.set("view engine", "ejs");
@@ -25,10 +25,10 @@ app.use(session({
   secret: 'ilovemernstack',
   resave: false,
   saveUninitialized: false,
-  cookie: { 
+  cookie: {
     secure: false,
     httpOnly: true,
-    sameSite: "lax"
+    sameSite: "none"
    }
 }));
 // Session
@@ -69,7 +69,6 @@ function isLogged(req, res, next) {
     });
 }
 
-
 app.get("/home/register", (req, res)=> {
     res.send("ee");
 })
@@ -77,6 +76,10 @@ app.get("/home/register", (req, res)=> {
 app.post("/home/register", async (req, res, next) => {
     try {
         const { username, email, password } = req.body;
+
+        if (!username || !email || !password) {
+            return res.status(400).send("Username, email, and password are all required.");
+        }
 
         const signedUser = new User({
             username,
@@ -100,7 +103,18 @@ app.post("/home/register", async (req, res, next) => {
 
     } catch (err) {
         console.log(err);
-        res.status(500).send(err.message);
+        if (err.name === "UserExistsError") {
+            return res.status(409).send("Username already exists. Choose a different username.");
+        }
+        if (err.code === 11000) {
+            if (err.keyValue?.username) {
+                return res.status(409).send("Username already exists. Choose a different username.");
+            }
+            if (err.keyValue?.email) {
+                return res.status(409).send("An account with that email already exists.");
+            }
+        }
+        return res.status(500).send(err.message || "Registration failed. Please try again.");
     }
 });
 
@@ -123,28 +137,21 @@ app.post("/home/logout", (req, res, next)=> {
     });
 });
 
-
 // profile
 app.get("/home/profile", isLogged, (req, res)=> {
-     console.log(req.headers.cookie);
-    console.log(req.session);
-    console.log(req.isAuthenticated());
-     console.log("Session ID:", req.sessionID);
-    console.log("Session:", req.session);
-    console.log("User:", req.user);
-    console.log("Authenticated:", req.isAuthenticated());
-
-
     res.json({
         username: req.user.username,
         email: req.user.email,
     });
-
 });
 
 // Delete route
-app.delete("/home/delete", (req, res, next)=> {
-    let { id } = req.body.id
+app.delete("/home/delete", async (req, res, next)=> {
+    let id = req.user._id
+    await User.findByIdAndDelete(id);
+    res.json({
+        message: "succesfully deleted"
+    });
 })
 
 // Error handling middleware 

@@ -4,14 +4,19 @@ const passportLocalMongoose = require("passport-local-mongoose").default;
 const userSchema = new Schema({
     email: {
         type: String,
-        required: true
+        required: true,
+        unique: true,
+        trim: true,
+        lowercase: true
     },
+    username: {
+        type: String,
+        required: true,
+        unique: true,
+        trim: true
+    }
 });
 userSchema.plugin(passportLocalMongoose);
 const User = mongoose.model("User", userSchema);
 
-
-
-
-// ye users banke export hua hai
 module.exports = User;

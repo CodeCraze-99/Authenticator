@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link, Navigate } from "react-router-dom";
-const navigate = useNavigate();
 function Profile() {
     const [profile, setProfile] = useState({});
+    const navigate = useNavigate();
 
     const getData = async () => {
         const response = await fetch("http://localhost:8080/home/profile", {
@@ -10,13 +10,17 @@ function Profile() {
             credentials: "include"
         });
         const data = await response.json();
+        if (!response.ok) {
+            navigate("/login");
+            return;
+        }
         setProfile(data);
     };
 
     const logOut = async ()=> {
         const response = await fetch("http://localhost:8080/home/logout", {
             method: "POST",
-            credentials: "include",
+            credentials: "include"
         })
         if(response.ok) {
            navigate("/login");
@@ -31,6 +35,7 @@ function Profile() {
     if(response.ok) {
         navigate("/");
     }
+}
 
     useEffect(() => {
         getData();
@@ -50,13 +55,9 @@ function Profile() {
                             <span className="profileLabel">Email</span>
                             <span className="profileValue">{profile.email}</span>
                         </div>
-                         <div className="profileRow">
-                            <span className="profileLabel">Logout</span>
-                            <span className="profileValue"><button onClick={logOut} >Logout</button></span>
-                        </div>
-                         <div className="profileRow">
-                            <span className="profileLabel">Logout</span>
-                            <span className="profileValue"><button>Delete Account</button></span>
+                         <div className="profileRow actionButtons">
+                            <button className="button secondary" onClick={logOut}>Logout</button>
+                            <button className="button danger" onClick={deleteUser}>Delete Account</button>
                         </div>
                     </>
                 ) : (
