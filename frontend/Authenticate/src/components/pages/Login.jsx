@@ -6,6 +6,7 @@ function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
+    const [error, setError] = useState("");
 
     const onSubmit = async (event) => {
         event.preventDefault();
@@ -22,8 +23,12 @@ function Login() {
                 email,
             })
         });
+        const data = await response.json();
         if (response.ok) {
             navigate("/profile");
+        }
+           else {
+          setError(data.message);
         }
     };
 
@@ -35,9 +40,7 @@ function Login() {
         if(response.ok) { 
             navigate("/profile");
         }
-        else {
-          navigate("/login");
-        }
+     
     }
      
      useEffect(() => {
@@ -47,6 +50,7 @@ function Login() {
         <div className="page">
             <div className="card">
                 <h2 className="title">Login</h2>
+                {error && <p className="error">{error}</p>}
                 <form onSubmit={onSubmit} className="form">
                     <input
                         className="input"

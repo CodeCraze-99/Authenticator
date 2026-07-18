@@ -5,11 +5,13 @@ function Register() {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
 
     const navigate = useNavigate();
 
     const onSubmit = async (event) => {
         event.preventDefault();
+        setError("");
 
         const response = await fetch("http://localhost:8080/home/register", {
             method: "POST",
@@ -23,8 +25,12 @@ function Register() {
                 password,
             })
         });
+        const data = response.json();
         if (response.ok) {
             navigate("/profile");
+        }
+        else {
+            setError(data.message);
         }
     };
 
@@ -32,6 +38,7 @@ function Register() {
         <div className="page">
             <div className="card">
                 <h2 className="title">Sign in</h2>
+                {error && <p className="error">{error}</p>}
                 <form className="form" onSubmit={onSubmit}>
                     <input
                         className="input"
