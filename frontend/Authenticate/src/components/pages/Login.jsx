@@ -14,6 +14,7 @@ function Login() {
                 isLogged,
             })
         });
+        const navigate = useNavigate();
     };
     return (
         <div className="page">

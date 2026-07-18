@@ -1,9 +1,12 @@
 import { useState } from "react";
+    import { useNavigate } from "react-router-dom";
 
 function Register() {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+
+    const navigate = useNavigate();
 
     const onSubmit = async (event) => {
         event.preventDefault();
@@ -20,9 +23,8 @@ function Register() {
             })
         });
         // window.location.reload();
-
-    console.log(response.status);
-    console.log(await response.text());
+        
+         navigate("/profile");
     };
 
     return (

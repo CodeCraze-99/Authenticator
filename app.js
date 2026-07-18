@@ -72,17 +72,10 @@ app.post("/home/register",async (req, res) => {
         username,
         email: email,
     });
-    console.log("Before register");
-
-await User.register(signedUser, password);
-
-console.log("After register");
-
-res.send("Registered successfully");
-//     await User.register(signedUser, password);
-//     console.log(`${username} logged in`);
-//     res.send("signing in");
-//    }
+    await User.register(signedUser, password);
+    console.log(`${username} logged in`);
+    res.send("signing in");
+   }
 //    catch(err) {
 //     // throw new ExpressError(500, "Unable to register"); finalized error
     
@@ -94,20 +87,28 @@ catch (err) {
 });
 app.get("/home/login", (req, res)=> {
     res.send("ee");
-})
+});
 // Login route 
 app.post("/home/login", passport.authenticate('local', {
     successRedirect: "/home",
     failureRedirect: "/home/register", failureFlash: true
 }), (req, res) => {
-    res.send("logged");
+    res.json({ message: "Logged In"});
 })
+
+// logout route 
+app.post("/home/logout", (req, res, next)=> {
+    req.logout(function (err) {
+      if(err) return next(err);
+      res.send("logged out");
+    });
+});
 
 
 // profile
 app.get("/profile", isLogged, (req, res)=> {
     res.send("work in progress here i will show profile");
-})
+});
 
 // Error handling middleware 
 app.use((err, req, res, next) => {
