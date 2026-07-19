@@ -181,6 +181,6 @@ app.delete("/home/delete", async (req, res, next) => {
 // Error handling middleware 
 app.use((err, req, res, next) => {
     let { status = 500, message = "something went wrong" } = err;
-    res.status(status).json({message,});
+    res.status(status).json({message: message});
     // in progress
 });
